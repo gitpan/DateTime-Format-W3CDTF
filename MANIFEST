@@ -1,0 +1,6 @@
+Changes
+MANIFEST
+Makefile.PL
+README
+lib/DateTime/Format/W3CDTF.pm
+t/00load.t
