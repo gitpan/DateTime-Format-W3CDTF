@@ -4,7 +4,7 @@ use strict;
 
 use vars qw ($VERSION);
 
-$VERSION = '0.01_01';
+$VERSION = '0.02';
 
 use DateTime;
 
@@ -148,9 +148,6 @@ date format of RSS 1.0.
 It can be used to parse these formats in order to create the appropriate 
 objects.
 
-NOTE:  W3CDTF does not define a duration format, so this module does not
-implement the C<parse_duration()>, and C<format_duration()> methods.
-
 =head1 METHODS
 
 This API is currently experimental and may change in the future.
@@ -164,18 +161,10 @@ C<DateTime> object.
 
 If given an improperly formatted string, this method may die.
 
-=item * parse_duration($string)
-
-This method is NOT supported, and will die if called.
-
 =item * format_datetime($datetime)
 
 Given a C<DateTime> object, this methods returns a W3CDTF datetime
 string.
-
-=item * format_duration($duration)
-
-This method is NOT supported, and will die if called.
 
 =head1 SUPPORT
 
