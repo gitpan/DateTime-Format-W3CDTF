@@ -4,7 +4,7 @@ use strict;
 
 use vars qw ($VERSION);
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 use DateTime;
 
@@ -91,10 +91,16 @@ sub format_datetime
 
     return $base if $tz->is_floating;
 
-    return $base . 'Z' if $tz->is_utc;
+	# if there is a time component
+	if ( $dt->hour || $dt->min || $dt->sec ) {
+    	return $base . 'Z' if $tz->is_utc;
 
-	if ( $tz->{'offset'} ) {
-		return $base . offset_as_string( $tz->{'offset'} );
+		if ( $tz->{'offset'} ) {
+			return $base . offset_as_string( $tz->{'offset'} );
+		}
+	}
+	else {
+		return $base;
 	}
 }
 
@@ -117,7 +123,7 @@ sub offset_as_string
 
     return ( $secs ?
              sprintf( '%s%02d:%02d:%02d', $sign, $hours, $mins, $secs ) :
-             sprintf( '%s%02d;%02d', $sign, $hours, $mins )
+             sprintf( '%s%02d:%02d', $sign, $hours, $mins )
            );
 }
 
