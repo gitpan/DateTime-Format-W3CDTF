@@ -4,7 +4,7 @@ use strict;
 
 use vars qw ($VERSION);
 
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 use DateTime;
 
@@ -78,30 +78,37 @@ sub format_datetime
 {
     my ( $self, $dt ) = @_;
 
-    my $base =
-        ( $dt->hour || $dt->min || $dt->sec ?
-          sprintf( '%04d-%02d-%02dT%02d:%02d:%02d',
-                   $dt->year, $dt->month, $dt->day,
-                   $dt->hour, $dt->minute, $dt->second ) :
-          sprintf( '%04d-%02d-%02d', $dt->year, $dt->month, $dt->day )
-        );
+    # removed in 0.4 as it behaved improperly at midnight - kellan 2003/11/23
+    #my $base =
+    #    ( $dt->hour || $dt->min || $dt->sec ?
+    #      sprintf( '%04d-%02d-%02dT%02d:%02d:%02d',
+    #               $dt->year, $dt->month, $dt->day,
+    #               $dt->hour, $dt->minute, $dt->second ) :
+    #      sprintf( '%04d-%02d-%02d', $dt->year, $dt->month, $dt->day )
+    #    );
+    
+	my $base = sprintf( '%04d-%02d-%02dT%02d:%02d:%02d',
+		$dt->year, $dt->month, $dt->day,
+        $dt->hour, $dt->minute, $dt->second );
 
 
     my $tz = $dt->time_zone;
 
     return $base if $tz->is_floating;
 
-	# if there is a time component
-	if ( $dt->hour || $dt->min || $dt->sec ) {
-    	return $base . 'Z' if $tz->is_utc;
+	return $base . 'Z' if $tz->is_utc;
 
-		if ( $tz->{'offset'} ) {
-			return $base . offset_as_string( $tz->{'offset'} );
-		}
+	if (my $offset = $dt->offset()) {
+		return $base . offset_as_string($offset );
 	}
-	else {
-		return $base;
-	}
+}
+
+sub format_date
+{
+    my ( $self, $dt ) = @_;
+
+    my $base = sprintf( '%04d-%02d-%02d', $dt->year, $dt->month, $dt->day );
+	return $base; 
 }
 
 # minor offset_as_string variant w/ :
@@ -171,6 +178,16 @@ If given an improperly formatted string, this method may die.
 
 Given a C<DateTime> object, this methods returns a W3CDTF datetime
 string.
+
+NOTE: As of version 0.4, format_datetime no longer attempts to truncate
+datetimes without a time component.  This is due to the fact that C<DateTime>
+doesn't distinguish between a date with no time component, and midnight.
+
+=item * format_date($datetime)
+
+Given a C<DateTime> object, return a W3CDTF datetime string without the time component.
+
+=back
 
 =head1 SUPPORT
 
