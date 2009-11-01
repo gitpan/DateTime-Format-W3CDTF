@@ -4,65 +4,61 @@ use strict;
 
 use vars qw ($VERSION);
 
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 use DateTime;
 
-sub new
-{
+sub new {
     my $class = shift;
 
     return bless {}, $class;
 }
 
 # key is string length
-my %valid_formats =
-    ( 19 =>
-      { params => [ qw( year month day hour minute second) ],
+my %valid_formats = (
+    19 => {
+        params => [qw( year month day hour minute second)],
         regex  => qr/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d):(\d\d)$/,
         zero   => {},
-      },
-      16 =>
-      { params => [ qw( year month day hour minute) ],
+    },
+    16 => {
+        params => [qw( year month day hour minute)],
         regex  => qr/^(\d{4})-(\d\d)-(\d\d)T(\d\d):(\d\d)$/,
         zero   => { second => 0 },
-      },
-      10 =>
-      { params => [ qw( year month day ) ],
+    },
+    10 => {
+        params => [qw( year month day )],
         regex  => qr/^(\d{4})-(\d\d)-(\d\d)$/,
         zero   => { hour => 0, minute => 0, second => 0 },
-      },
-      7 =>
-      { params => [ qw( year month ) ],
+    },
+    7 => {
+        params => [qw( year month )],
         regex  => qr/^(\d{4})-(\d\d)$/,
         zero   => { day => 1, hour => 0, minute => 0, second => 0 },
-      },
-	  4 =>
-      { params => [ qw( year ) ],
+    },
+    4 => {
+        params => [qw( year )],
         regex  => qr/^(\d\d\d\d)$/,
-        zero   => { month => 1, day => 1, hour => 0, minute => 0, second => 0 }
-      }
-    );
+        zero => { month => 1, day => 1, hour => 0, minute => 0, second => 0 }
+    }
+);
 
-sub parse_datetime
-{
+sub parse_datetime {
     my ( $self, $date ) = @_;
 
     # save for error messages
     my $original = $date;
 
-	my %p;
-    if ( $date =~ s/([+-]\d\d:\d\d)$// )
-    {
+    my %p;
+    if ( $date =~ s/([+-]\d\d:\d\d)$// ) {
         $p{time_zone} = $1;
     }
+
     # Z at end means UTC
-    elsif ( $date =~ s/Z$// )
-    {
+    elsif ( $date =~ s/Z$// ) {
         $p{time_zone} = 'UTC';
     }
-    else
-    {
+    else {
         $p{time_zone} = 'floating';
     }
 
@@ -74,8 +70,7 @@ sub parse_datetime
     return DateTime->new( %p, %{ $format->{zero} } );
 }
 
-sub format_datetime
-{
+sub format_datetime {
     my ( $self, $dt ) = @_;
 
     # removed in 0.4 as it behaved improperly at midnight - kellan 2003/11/23
@@ -86,35 +81,36 @@ sub format_datetime
     #               $dt->hour, $dt->minute, $dt->second ) :
     #      sprintf( '%04d-%02d-%02d', $dt->year, $dt->month, $dt->day )
     #    );
-    
-	my $base = sprintf( '%04d-%02d-%02dT%02d:%02d:%02d',
-		$dt->year, $dt->month, $dt->day,
-        $dt->hour, $dt->minute, $dt->second );
 
+    my $base = sprintf(
+        '%04d-%02d-%02dT%02d:%02d:%02d',
+        $dt->year, $dt->month,  $dt->day,
+        $dt->hour, $dt->minute, $dt->second
+    );
 
     my $tz = $dt->time_zone;
 
     return $base if $tz->is_floating;
 
-	return $base . 'Z' if $tz->is_utc;
+    return $base . 'Z' if $tz->is_utc;
 
-	if (my $offset = $dt->offset()) {
-		return $base . offset_as_string($offset );
-	}
+    my $offset = $dt->offset();
+
+    return $base unless defined $offset;
+
+    return $base . offset_as_string($offset)
 }
 
-sub format_date
-{
+sub format_date {
     my ( $self, $dt ) = @_;
 
     my $base = sprintf( '%04d-%02d-%02d', $dt->year, $dt->month, $dt->day );
-	return $base; 
+    return $base;
 }
 
 # minor offset_as_string variant w/ :
 #
-sub offset_as_string
-{
+sub offset_as_string {
     my $offset = shift;
 
     return undef unless defined $offset;
@@ -128,10 +124,11 @@ sub offset_as_string
 
     my $secs = $offset % 60;
 
-    return ( $secs ?
-             sprintf( '%s%02d:%02d:%02d', $sign, $hours, $mins, $secs ) :
-             sprintf( '%s%02d:%02d', $sign, $hours, $mins )
-           );
+    return (
+        $secs
+        ? sprintf( '%s%02d:%02d:%02d', $sign, $hours, $mins, $secs )
+        : sprintf( '%s%02d:%02d',      $sign, $hours, $mins )
+    );
 }
 
 1;
@@ -146,11 +143,11 @@ DateTime::Format::W3CDTF - Parse and format W3CDTF datetime strings
 
   use DateTime::Format::W3CDTF;
 
-  my $f = DateTime::Format::W3CDTF->new;
-  my $dt = $f->parse_datetime( '2003-02-15T13:50:05-05:00' );
+  my $w3c = DateTime::Format::W3CDTF->new;
+  my $dt = $w3c->parse_datetime( '2003-02-15T13:50:05-05:00' );
 
   # 2003-02-15T13:50:05-05:00
-  $f->format_datetime($dt);
+  $w3c->format_datetime($dt);
 
 =head1 DESCRIPTION
 
@@ -192,19 +189,33 @@ Given a C<DateTime> object, return a W3CDTF datetime string without the time com
 =head1 SUPPORT
 
 Support for this module is provided via the datetime@perl.org email
-list.  See http://lists.perl.org/ for more details.
+list. See http://datetime.perl.org/?MailingList for details.
+
+Please submit bugs to the CPAN RT system at
+http://rt.cpan.org/NoAuth/ReportBug.html?Queue=datetime-format-w3cdtf or via
+email at bug-datetime-format-w3cdtf@rt.cpan.org.
 
 =head1 AUTHOR
 
-Kellan Elliott-McCrea <kellan@protest.net>
+Dave Rolsky E<lt>autarch@urth.orgE<gt>
 
-This module was inspired by C<DateTime::Format::ICal>
+=head1 CREDITS
+
+This module was originally created by Kellan Elliott-McCrea
+E<lt>kellan@protest.netE<gt>.
+
+This module was inspired by L<DateTime::Format::ICal>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Kellan Elliott-McCrea.  All rights reserved.  This program
-is free software; you can redistribute it and/or modify it under the
-same terms as Perl itself.
+Copyright (c) 2009 David Rolsky.  All rights reserved.  This
+program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+Copyright (c) 2003 Kellan Elliott-McCrea
+
+Portions of the code in this distribution are derived from other
+works.  Please see the CREDITS file for more details.
 
 The full text of the license can be found in the LICENSE file included
 with this module.

@@ -1,0 +1,26 @@
+---
+name: DateTime-Format-W3CDTF
+version: 0.05
+author:
+  - 'Dave Rolsky E<lt>autarch@urth.orgE<gt>'
+abstract: Parse and format W3CDTF datetime strings
+license: perl
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=DateTime-Format-W3CDTF
+  homepage: http://datetime.perl.org/
+  license: http://dev.perl.org/licenses/
+  repository: https://perl-date-time.svn.sourceforge.net/svnroot/perl-date-time
+build_requires:
+  Test::More: 0
+requires:
+  DateTime: 0
+configure_requires:
+  Module::Build: 0.35
+provides:
+  DateTime::Format::W3CDTF:
+    file: lib/DateTime/Format/W3CDTF.pm
+    version: 0.05
+generated_by: Module::Build version 0.35
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
