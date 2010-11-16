@@ -21,23 +21,26 @@ DESCRIPTION
 METHODS
     This API is currently experimental and may change in the future.
 
-    * parse_datetime($string)
+    *   parse_datetime($string)
+
         Given a W3CDTF datetime string, this method will return a new
-        `DateTime' object.
+        "DateTime" object.
 
         If given an improperly formatted string, this method may die.
 
-    * format_datetime($datetime)
-        Given a `DateTime' object, this methods returns a W3CDTF datetime
+    *   format_datetime($datetime)
+
+        Given a "DateTime" object, this methods returns a W3CDTF datetime
         string.
 
         NOTE: As of version 0.4, format_datetime no longer attempts to
         truncate datetimes without a time component. This is due to the fact
-        that `DateTime' doesn't distinguish between a date with no time
+        that "DateTime" doesn't distinguish between a date with no time
         component, and midnight.
 
-    * format_date($datetime)
-        Given a `DateTime' object, return a W3CDTF datetime string without
+    *   format_date($datetime)
+
+        Given a "DateTime" object, return a W3CDTF datetime string without
         the time component.
 
 SUPPORT
@@ -52,8 +55,8 @@ AUTHOR
     Dave Rolsky <autarch@urth.org>
 
 CREDITS
-    This module was originally created by Kellan Elliott-McCrea
-    <kellan@protest.net>.
+    This module is maintained by Gregory Todd Williams <gwilliams@cpan.org>.
+    It was originally created by Kellan Elliott-McCrea <kellan@protest.net>.
 
     This module was inspired by DateTime::Format::ICal
 

@@ -1,26 +1,30 @@
 ---
-name: DateTime-Format-W3CDTF
-version: 0.05
+abstract: 'Parse and format W3CDTF datetime strings'
 author:
-  - 'Dave Rolsky E<lt>autarch@urth.orgE<gt>'
-abstract: Parse and format W3CDTF datetime strings
-license: perl
-resources:
-  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=DateTime-Format-W3CDTF
-  homepage: http://datetime.perl.org/
-  license: http://dev.perl.org/licenses/
-  repository: https://perl-date-time.svn.sourceforge.net/svnroot/perl-date-time
+  - 'Dave Rolsky <autarch@urth.org>'
+  - 'Gregory Todd Williams <gwilliams@cpan.org>'
 build_requires:
-  Test::More: 0
-requires:
-  DateTime: 0
+  ExtUtils::MakeMaker: 6.42
+  Test::More: 0.61
 configure_requires:
-  Module::Build: 0.35
-provides:
-  DateTime::Format::W3CDTF:
-    file: lib/DateTime/Format/W3CDTF.pm
-    version: 0.05
-generated_by: Module::Build version 0.35
+  ExtUtils::MakeMaker: 6.42
+distribution_type: module
+generated_by: 'Module::Install version 0.99'
+license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
+name: DateTime-Format-W3CDTF
+no_index:
+  directory:
+    - examples
+    - inc
+    - t
+requires:
+  DateTime: 0
+resources:
+  bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=DateTime-Format-W3CDTF
+  homepage: http://search.cpan.org/dist/DateTime-Format-W3CDTF/
+  license: http://dev.perl.org/licenses/
+  repository: http://github.com/kasei/datetime-format-w3cdtf
+version: 0.05_01
