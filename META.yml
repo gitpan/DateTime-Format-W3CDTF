@@ -27,4 +27,4 @@ resources:
   homepage: http://search.cpan.org/dist/DateTime-Format-W3CDTF/
   license: http://dev.perl.org/licenses/
   repository: http://github.com/kasei/datetime-format-w3cdtf
-version: 0.05_01
+version: 0.06
